@@ -66,7 +66,7 @@ num_val = 7178
 batch_size = 64
 num_epoch = 50
 
-HOST = '192.168.219.102'
+HOST = '192.168.0.2'
 PORT = 8485
 
 
