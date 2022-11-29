@@ -1,4 +1,6 @@
 import socket
+import time
+
 import cv2
 import numpy as np
 
@@ -133,13 +135,12 @@ elif mode == "display":
 
     # 연결, conn에는 소켓 객체, addr은 소켓에 바인드 된 주소
     conn, addr = s.accept()
-
     model.load_weights('model.h5')
 
     cv2.ocl.setUseOpenCL(False)
     emotion_dict = {0: "Angry", 1: "Disgusted", 2: "Fearful", 3: "Happy", 4: "Neutral", 5: "Sad", 6: "Surprised"}
-
     while True:
+
         # client에서 받은 stringData의 크기 (==(str(len(stringData))).encode().ljust(16))
         length = recvall(conn, 16)
         stringData = recvall(conn, int(length))
@@ -154,12 +155,21 @@ elif mode == "display":
 
         for (x, y, w, h) in faces:
             cv2.rectangle(frame, (x, y - 50), (x + w, y+ h + 10), (255, 0, 0), 2)
+            center_w = x + (w/2)
             roi_gray = gray[y:y + h, x:x + w]
             cropped_img = np.expand_dims(np.expand_dims(cv2.resize(roi_gray, (48, 48)), -1), 0)
             prediction = model.predict(cropped_img)
             maxindex = int(np.argmax(prediction))
             cv2.putText(frame, emotion_dict[maxindex], (x + 20, y - 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255),
                         2, cv2.LINE_AA)
+            conn.send(emotion_dict[maxindex].encode())
+
+            if center_w < 140:
+                conn.send('right'.encode())
+            elif center_w > 180:
+                conn.send('left'.encode())
+            else :
+                conn.send('center'.encode())
 
         cv2.imshow('Video', cv2.resize(frame, (320, 240), interpolation=cv2.INTER_CUBIC))
         if cv2.waitKey(1) & 0xFF == ord('q'):

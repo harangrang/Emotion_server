@@ -151,11 +151,11 @@ elif mode == "display":
     print('Socket created')
 
     # 서버의 아이피와 포트번호 지정
-    s.bind((HOST, PORT))
+    #s.bind((HOST, PORT))
     print('Socket bind complete')
 
     # 클라이언트의 접속을 기다린다. (클라이언트 연결을 10개까지 받는다)
-    s.listen(10)
+    #s.listen(10)
     print('Socket now listening')
 
     # 연결, conn에는 소켓 객체, addr은 소켓에 바인드 된 주소
@@ -163,7 +163,7 @@ elif mode == "display":
 
     model.load_weights('model.h5')
 
-    cv2.ocl.setUseOpenCL(False)
+    #cv2.ocl.setUseOpenCL(False)
     emotion_dict = {0: "Angry", 1: "Disgusted", 2: "Fearful", 3: "Happy", 4: "Neutral", 5: "Sad", 6: "Surprised"}
     cap = cv2.VideoCapture(0)
     cap.set(3, 320)
