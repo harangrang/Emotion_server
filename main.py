@@ -58,7 +58,7 @@ ap.add_argument("--mode",help="train/display")
 mode = ap.parse_args().mode
 if mode == None:
     mode = "display"
-
+mode = "display"
 # Define data generators
 train_dir = 'data/train'
 val_dir = 'data/test'
